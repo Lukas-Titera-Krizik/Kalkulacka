@@ -48,18 +48,47 @@ public class MainActivity extends AppCompatActivity {
         try{
 
             double result;
+            double number1 = 0;
+            double number2 = 0;
 
             String operand = spinnerOperation.getSelectedItem().toString();
 
-            //vezme celý edittext a uloží ho do input1
-            EditText input1 = (EditText) findViewById(R.id.editTextNumberDecimal);
-            //z edittextu v input1 vezme jeho obsah a prevedeho do double, ten se ulozi do number1
-            double number1 = Double.parseDouble(input1.getText().toString());
+            try{
 
-            //vezme celý edittext a uloží ho do input2
-            EditText input2 = (EditText) findViewById(R.id.editTextNumberDecimal2);
-            //z edittextu v input2 vezme jeho obsah a prevedeho do double, ten se ulozi do number2
-            double number2 = Double.parseDouble(input2.getText().toString());
+                //vezme celý edittext a uloží ho do input1
+                EditText input1 = (EditText) findViewById(R.id.editTextNumberDecimal);
+                //z edittextu v input1 vezme jeho obsah a prevedeho do double, ten se ulozi do number1
+                number1 = Double.parseDouble(input1.getText().toString());
+
+            } catch (Exception e) {
+
+                TextView textView = (TextView) findViewById(R.id.textView);
+                CharSequence text = "Zadejte obě čísla >:(";
+                if(operand.equals("!")) text = "Stačí zadat pouze první číslo :)";
+                textView.setText(String.valueOf(text));
+                return;
+
+            }
+
+            if(!operand.equals("!")){
+
+                try{
+
+                    //vezme celý edittext a uloží ho do input2
+                    EditText input2 = (EditText) findViewById(R.id.editTextNumberDecimal2);
+                    //z edittextu v input2 vezme jeho obsah a prevedeho do double, ten se ulozi do number2
+                    number2 = Double.parseDouble(input2.getText().toString());;
+
+                } catch (Exception e) {
+
+                    TextView textView = (TextView) findViewById(R.id.textView);
+                    CharSequence text = "Zadejte obě čísla >:(";
+                    textView.setText(String.valueOf(text));
+                    return;
+
+                }
+
+            }
 
             switch(operand){
                 case "+":{
@@ -75,7 +104,18 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 }
                 case "/":{
-                    result = number1 / number2;
+
+                    if(number2 == 0){
+
+                        TextView textView = (TextView) findViewById(R.id.textView);
+                        CharSequence text = "Nelze dělit nulou :(";
+                        textView.setText(String.valueOf(text));
+                        return;
+
+                    }else{
+                        result = number1 / number2;
+                    }
+
                     break;
                 }
                 case "%":{
@@ -83,17 +123,28 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 }
                 case "ⁿ√":{
-                    //Vrátí ntou (number2) odmocninu z number1
-                    result = Math.pow(number1, 1/number2);
+
+
+                    if (number1 == 0) {
+                        TextView textView = (TextView) findViewById(R.id.textView);
+                        CharSequence text = "Nultá odmocnina neexistuje :|";
+                        textView.setText(String.valueOf(text));
+                        return;
+                    }else if(number2 < 0){
+                        TextView textView = (TextView) findViewById(R.id.textView);
+                        CharSequence text = "Neumím imaginární čísla :(";
+                        textView.setText(String.valueOf(text));
+                        return;
+                    }else{
+                        //Vrátí ntou (number2) odmocninu z number1
+                        result = Math.pow(number2, 1/number1);
+                    }
+
                     break;
                 }
                 case "^":{
                     //Vrátí mocninu number1 na number2
                     result = Math.pow(number1, number2);
-                /*result = number1;
-                for(int i = 1; i <= number2; i++){
-                    result *= number1;
-                }*/
                     break;
                 }
                 case "!":{
